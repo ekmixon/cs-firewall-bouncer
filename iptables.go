@@ -149,9 +149,10 @@ func (ipt *iptables) Add(decision *models.Decision) error {
 		return nil
 	}
 
-	//we now have to know if ba is for an ipv4 or ipv6
-	//the obvious way would be to get the len of net.ParseIp(ba) but this is 16 internally even for ipv4.
-	//so we steal the ugly hack from https://github.com/asaskevich/govalidator/blob/3b2665001c4c24e3b076d1ca8c428049ecbb925b/validator.go#L501
+	// we now have to know if ba is for an ipv4 or ipv6 the obvious way
+	// would be to get the len of net.ParseIp(ba) but this is 16 internally
+	// even for ipv4. so we steal the ugly hack from
+	// https://github.com/asaskevich/govalidator/blob/3b2665001c4c24e3b076d1ca8c428049ecbb925b/validator.go#L501
 	if strings.Contains(*decision.Value, ":") {
 		if ipt.v6 == nil {
 			log.Debugf("not adding '%s' because ipv6 is disabled", *decision.Value)
@@ -170,7 +171,7 @@ func (ipt *iptables) Add(decision *models.Decision) error {
 	}
 
 	if !done {
-		return fmt.Errorf("failed inserting ban: ip %s was not recognised", *decision.Value)
+		return fmt.Errorf("failed inserting ban: ip %s was not recognized", *decision.Value)
 	}
 
 	return nil
@@ -209,7 +210,7 @@ func (ipt *iptables) Delete(decision *models.Decision) error {
 		done = true
 	}
 	if !done {
-		return fmt.Errorf("failed deleting ban: ip %s was not recognised", *decision.Value)
+		return fmt.Errorf("failed deleting ban: ip %s was not recognized", *decision.Value)
 	}
 	return nil
 }
