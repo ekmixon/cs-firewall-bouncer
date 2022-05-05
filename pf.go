@@ -140,10 +140,10 @@ func (ctx *pfContext) Delete(decision *models.Decision) error {
 func initPF(ctx *pfContext) error {
 
 	if err := ctx.shutDown(); err != nil {
-		return fmt.Errorf("pf table flush failed: %s", err.Error())
+		return errors.Wrap(err, "pf table flush failed")
 	}
 	if err := ctx.checkTable(); err != nil {
-		return fmt.Errorf("pf init failed: %s", err.Error())
+		return errors.Wrap(err, "pf init failed")
 	}
 	log.Infof("%s initiated for %s", backendName, ctx.version)
 
@@ -153,11 +153,11 @@ func initPF(ctx *pfContext) error {
 func (pf *pf) Init() error {
 
 	if _, err := os.Stat(pfDevice); err != nil {
-		return fmt.Errorf("%s device not found: %s", pfDevice, err.Error())
+		return errors.Wrapf(err, "%s device not found", pfDevice)
 	}
 
 	if _, err := exec.LookPath(pfctlCmd); err != nil {
-		return fmt.Errorf("%s command not found: %s", pfctlCmd, err.Error())
+		return errors.Wrapf(err, "%s command not found", pfctlCmd)
 	}
 
 	if err := initPF(pf.inet); err != nil {

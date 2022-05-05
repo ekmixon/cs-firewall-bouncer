@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/crowdsecurity/crowdsec/pkg/types"
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -65,12 +66,12 @@ func newConfig(configPath string) (*bouncerConfig, error) {
 
 	configBuff, err := ioutil.ReadFile(configPath)
 	if err != nil {
-		return &bouncerConfig{}, fmt.Errorf("failed to read %s : %v", configPath, err)
+		return &bouncerConfig{}, errors.Wrapf(err, "failed to read %s", configPath)
 	}
 
 	err = yaml.Unmarshal(configBuff, &config)
 	if err != nil {
-		return &bouncerConfig{}, fmt.Errorf("failed to unmarshal %s : %v", configPath, err)
+		return &bouncerConfig{}, errors.Wrapf(err, "failed to unmarshal %s", configPath)
 	}
 
 	err = validateConfig(*config)

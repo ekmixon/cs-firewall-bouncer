@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/crowdsecurity/crowdsec/pkg/models"
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -113,24 +114,24 @@ func (ipt *iptables) Init() error {
 	log.Printf("iptables for ipv4 initiated")
 	// flush before init
 	if err := ipt.v4.shutDown(); err != nil {
-		return fmt.Errorf("iptables shutdown failed: %s", err.Error())
+		return errors.Wrap(err, "iptables shutdown failed")
 	}
 
 	// Create iptable to rule to attach the set
 	if err := ipt.v4.CheckAndCreate(); err != nil {
-		return fmt.Errorf("iptables init failed: %s", err.Error())
+		return errors.Wrap(err, "iptables init failed")
 	}
 
 	if ipt.v6 != nil {
 		log.Printf("iptables for ipv6 initiated")
 		err = ipt.v6.shutDown() // flush before init
 		if err != nil {
-			return fmt.Errorf("iptables shutdown failed: %s", err.Error())
+			return errors.Wrap(err, "iptables shutdown failed")
 		}
 
 		// Create iptable to rule to attach the set
 		if err := ipt.v6.CheckAndCreate(); err != nil {
-			return fmt.Errorf("iptables init failed: %s", err.Error())
+			return errors.Wrap(err, "iptables init failed")
 		}
 	}
 	return nil
@@ -178,12 +179,12 @@ func (ipt *iptables) Add(decision *models.Decision) error {
 func (ipt *iptables) ShutDown() error {
 	err := ipt.v4.shutDown()
 	if err != nil {
-		return fmt.Errorf("iptables for ipv4 shutdown failed: %s", err.Error())
+		return errors.Wrap(err, "iptables for ipv4 shutdown failed")
 	}
 	if ipt.v6 != nil {
 		err = ipt.v6.shutDown()
 		if err != nil {
-			return fmt.Errorf("iptables for ipv6 shutdown failed: %s", err.Error())
+			return errors.Wrap(err, "iptables for ipv6 shutdown failed")
 		}
 	}
 	return nil
