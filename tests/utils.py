@@ -18,10 +18,7 @@ def generate_n_decisions(n: int, action="ban", dup_count=0, ipv4=True, duration=
     unique_decision_count = n - dup_count
     decisions = []
     for i in range(unique_decision_count):
-        if ipv4:
-            ip = ip_address(i)
-        else:
-            ip = ip_address(2 ** 32 + i)
+        ip = ip_address(i) if ipv4 else ip_address(2 ** 32 + i)
         decisions.append(
             {
                 "value": ip.__str__(),

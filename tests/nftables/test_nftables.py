@@ -165,8 +165,13 @@ def get_set_elements(family, table_name, set_name, with_timeout=False):
             continue
         if not isinstance(node["set"]["elem"][0], dict):
             return set(node["set"]["elem"])
-        else:
-            if not with_timeout:
-                return {elem["elem"]["val"] for elem in node["set"]["elem"]}
-            return {(elem["elem"]["val"], elem["elem"]["timeout"]) for elem in node["set"]["elem"]}
+        return (
+            {
+                (elem["elem"]["val"], elem["elem"]["timeout"])
+                for elem in node["set"]["elem"]
+            }
+            if with_timeout
+            else {elem["elem"]["val"] for elem in node["set"]["elem"]}
+        )
+
     return set()

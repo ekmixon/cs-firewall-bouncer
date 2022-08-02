@@ -83,7 +83,7 @@ class MockLAPI:
         api_key = request.headers.get("x-api-key")
         if not api_key:
             abort(404)
-        startup = True if request.args.get("startup") == "true" else False
+        startup = request.args.get("startup") == "true"
         active_decisions, expired_decisions = self.ds.get_decisions_for_bouncer(api_key, startup)
         return {
             "new": formatted_decisions(active_decisions),
